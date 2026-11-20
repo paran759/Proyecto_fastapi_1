@@ -1,0 +1,29 @@
+from fastapi import APIRouter, HTTPException, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+from core.database import obtener_bd
+from schemas.schemasMecanico import MecanicoCreate, MecanicoResponde
+
+routerM = APIRouter(prefix="/mecanicos", tags=["Gestionar mecanicos"])
+
+@routerM.post("/crear", status_code=201)
+async def crear_mecanico(mecanico: MecanicoCreate, db: AsyncSession = Depends(obtener_bd)):
+    nuevo_mecanico = Mecanico(**mecanico.model_dump())
+    db.add(nuevo_mecanico)
+
+    try:
+        await db.commit()
+    except Exception as e:
+        await db.rollback()
+        raise HTTPException(status_code=500, detail="Error al guardar el mecánico en la base de datos.")
+
+    await db.refresh(nuevo_mecanico)
+    return "Nuevo mecanico ingresado", nuevo_mecanico
+
+@routerM.get("/listar")
+async def listar_mecanicos(db: AsyncSession = Depends(obtener_bd)):
+    seleccionar = select(Mecanico)
+    resultado = await db.execute(seleccionar)
+    mecanicos = resultado.scalars().all()
+
+    return mecanicos
