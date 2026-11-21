@@ -10,3 +10,5 @@ class Repuesto(Base):
     precio_compra = Column(Float)
     precio_venta = Column(Float)
     stock = Column(Integer, default=0)
+
+    factura = relationship("Factura", back_populates="repuesto")

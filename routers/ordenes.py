@@ -92,4 +92,12 @@ async def actualizacion_parcial(placa: str, orden_patch: OrdenPatch):
     raise HTTPException(status_code=404, detail="La orden no existe.")
 
 
-@router.post("/{orden_id}/repuesto",status_code,)
+@router.post("/{orden_id}/repuestos", status_code=201, response_model=RepuestoEnOrdenResponse)
+async def agregar_repuesto_a_orden(
+    orden_id: int,
+    datos: AgregarRepuestoOrden,
+    db: AsyncSession(obtener_bd)
+):
+    res_orden = await db.execute(select(OrdenModel).where(OrdenModel.id == orden_id))
+    orden_db = res_orden.scalar_one_or_none #toma el dato de un campo unico y lo llama en la variable
+    

@@ -30,7 +30,8 @@ class AgregarRepuestoOrden(BaseModel):
 
 class RespuestoEnOrdenResponse(BaseModel):
     id: int
-    repuesto_id:intcantida:int
+    repuesto_id:int
+    cantida:int
     precio_unitario:float
 
-    model
+    model_config = {"from_attribues": True}
