@@ -1,3 +1,8 @@
 __pycache__/
 venv/
 inventario.json
+.env.example
+taller.json
+funciones.py
+dependencias.py
+requeriments.txt
